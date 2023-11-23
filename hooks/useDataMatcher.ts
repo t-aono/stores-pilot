@@ -1,6 +1,7 @@
 export interface MatchedItem {
   variationId: string;
-  value: string[];
+  inventory: string[];
+  zaiko: string[];
 }
 
 export function useDataMatcher() {
@@ -9,12 +10,16 @@ export function useDataMatcher() {
     let matches: MatchedItem[] = [];
     for (let row = 1; row < inventory.length; row++) {
       if (inventory[row].length === 0) continue;
-      const variationId = inventory[row][0] ? inventory[row][0] : "";
+      const variationId = inventory[row][0];
       if (!variationId) continue;
       for (let r = 0; r < zaiko.length; r++) {
         if (!zaiko[r][3]) continue;
         if (variationId === zaiko[r][3]) {
-          matches.push({ variationId: variationId, value: zaiko[r] });
+          matches.push({
+            variationId,
+            inventory: inventory[row],
+            zaiko: zaiko[r],
+          });
         }
       }
     }

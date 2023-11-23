@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrders } from "./order";
+import { getOrders, updateInventory } from "./stores";
 import { useCsvParser } from "@/hooks/useParseCsv";
 import { MatchedItem, useDataMatcher } from "@/hooks/useDataMatcher";
 import InputFile from "@/components/InputFile";
@@ -12,6 +12,7 @@ export default function Home() {
   const [inventory, setInventory] = useState<string[][] | null>(null);
   const [zaiko, setZaiko] = useState<string[][] | null>(null);
   const [items, setItems] = useState<MatchedItem[]>([]);
+  const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const { parseCsvFile } = useCsvParser();
   const { getMatches } = useDataMatcher();
 
@@ -24,6 +25,17 @@ export default function Home() {
   async function fetchOrder() {
     const { orders } = await getOrders();
     console.log(orders);
+  }
+
+  async function postInventory() {
+    const updateItems = items
+      .filter((item) => checkedIds.includes(item.variationId))
+      .map((item) => ({
+        variationId: item.variationId,
+        quantity: Number(item.zaiko[4]),
+      }));
+    const response = await updateInventory(updateItems[0]);
+    console.log(response);
   }
 
   return (
@@ -48,7 +60,11 @@ export default function Home() {
         <h3>matches</h3>
         {items.length > 0 ? (
           <div className="h-80 overflow-auto">
-            <ItemTable items={items} />
+            <ItemTable
+              items={items}
+              checkedIds={checkedIds}
+              setCheckedIds={setCheckedIds}
+            />
           </div>
         ) : (
           <div>一致アイテムがありません</div>
@@ -56,7 +72,12 @@ export default function Home() {
       </div>
       <div className="mt-12">
         <h3>API Request</h3>
-        <BaseButton onClick={fetchOrder} label="fetch order" />
+        <div className="mt-4">
+          <BaseButton onClick={fetchOrder} label="fetch order" />
+        </div>
+        <div className="mt-4">
+          <BaseButton onClick={postInventory} label="post inventory" />
+        </div>
       </div>
     </main>
   );
