@@ -35,12 +35,15 @@ export default function ItemTable({
           <tr key={item.variationId} className="border-b-2 h-12">
             <td className="w-8 text-center">
               <input
+                id={item.variationId}
                 type="checkbox"
-                value={item.variationId}
-                onChange={(e) => handleCheck(e.target.value)}
+                checked={checkedIds.includes(item.variationId)}
+                onChange={() => handleCheck(item.variationId)}
               />
             </td>
-            <td>{item.variationId}</td>
+            <td>
+              <label htmlFor={item.variationId}>{item.variationId}</label>
+            </td>
             <td>{item.inventory[4]}</td>
             <td>{item.inventory[5]}</td>
             <td className="text-center">{item.inventory[10]}</td>
