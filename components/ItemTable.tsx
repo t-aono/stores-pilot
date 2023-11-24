@@ -20,7 +20,7 @@ export default function ItemTable({
 
   return (
     <table className="table-auto">
-      <thead className="bg-indigo-50 sticky top-0">
+      <thead className="bg-teal-50 text-teal-500 sticky top-0">
         <tr>
           <th></th>
           <th className="px-2">バリエーションID</th>

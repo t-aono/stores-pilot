@@ -9,7 +9,7 @@ export default function BaseButton({
 }) {
   return (
     <button
-      className="border px-4 py-2 bg-indigo-700 text-white rounded-md"
+      className="border px-4 py-2 bg-teal-500 text-white rounded-md"
       onClick={onClick}
     >
       {label}
