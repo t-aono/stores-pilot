@@ -33,11 +33,6 @@ export default function Home() {
     setIsCheckAll(!isCheckAll);
   }
 
-  async function fetchOrder() {
-    const { orders } = await getOrders();
-    console.log(orders);
-  }
-
   async function postInventory() {
     const updateItems = items
       .filter((item) => checkedIds.includes(item.variationId))
@@ -53,7 +48,7 @@ export default function Home() {
   return (
     <main className="container min-h-screen mx-auto p-8">
       <div className="mt-4">
-        <h3>STORES CSV (inventory)</h3>
+        <h3 className="font-medium">STORES CSV (inventory)</h3>
         <InputFile
           onChange={async (e) =>
             setInventory(await parseCsvFile(e.currentTarget.files))
@@ -61,7 +56,7 @@ export default function Home() {
         />
       </div>
       <div className="mt-4">
-        <h3>L-spark CSV (zaikokanri)</h3>
+        <h3 className="font-medium">L-spark CSV (zaikokanri)</h3>
         <InputFile
           onChange={async (e) =>
             setZaiko(await parseCsvFile(e.currentTarget.files, "shift-jis"))
@@ -71,7 +66,7 @@ export default function Home() {
       <div className="mt-4">
         {items.length > 0 && (
           <>
-            <h3>IDが一致したアイテム</h3>
+            <h3 className="font-medium">IDが一致したアイテム</h3>
             <div className="h-80 overflow-auto">
               <ItemTable
                 items={items}
@@ -104,11 +99,6 @@ export default function Home() {
           {message}
         </div>
       )}
-      {/* <div className="mt-12">
-        <div className="mt-4">
-          <BaseButton onClick={fetchOrder} label="fetch order" />
-        </div>
-      </div> */}
     </main>
   );
 }

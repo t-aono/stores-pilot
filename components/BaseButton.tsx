@@ -3,11 +3,11 @@ import { MouseEventHandler } from "react";
 export default function BaseButton({
   onClick,
   label,
-  disabled,
+  disabled = false,
 }: {
   onClick: MouseEventHandler<HTMLButtonElement>;
   label: string;
-  disabled: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
