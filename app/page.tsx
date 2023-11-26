@@ -100,7 +100,7 @@ export default function Home() {
         )}
       </div>
       {message && (
-        <div className="mt-4 bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-sm">
+        <div className="mt-4 bg-teal-100 border-l-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-sm">
           {message}
         </div>
       )}
