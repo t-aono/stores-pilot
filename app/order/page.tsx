@@ -10,8 +10,8 @@ export default function Order() {
 
   async function fetchOrder() {
     const { orders } = await getOrders();
-    setMessage("取得しました！");
     console.log(orders);
+    setMessage("取得しました！");
   }
 
   return (

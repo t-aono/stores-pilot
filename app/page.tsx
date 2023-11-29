@@ -16,6 +16,7 @@ export default function Home() {
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
   const { parseCsvFile } = useCsvParser();
   const { getMatches } = useDataMatcher();
 
@@ -35,15 +36,20 @@ export default function Home() {
   }
 
   async function postInventory() {
+    setSending(true);
     const updateItems = items
       .filter((item) => checkedIds.includes(item.variationId))
       .map((item) => ({
         variationId: item.variationId,
         quantity: Number(item.zaiko[4]),
       }));
-    const response = await updateInventory(updateItems[0]);
+    for await (let updateItem of updateItems) {
+      console.log(await updateInventory(updateItem));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
     setMessage("更新しました！");
-    console.log(response);
+    setCheckedIds([]);
+    setSending(false);
   }
 
   return (
@@ -89,8 +95,9 @@ export default function Home() {
               <BaseButton
                 onClick={postInventory}
                 label="更新"
-                disabled={checkedIds.length === 0}
+                disabled={checkedIds.length === 0 || sending}
               />
+              {sending && <span className="text-teal-300 ml-6">送信中...</span>}
             </div>
           </>
         )}
