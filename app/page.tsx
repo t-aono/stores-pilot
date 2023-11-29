@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrders, updateInventory } from "./stores";
+import { updateInventory } from "./stores";
 import { useCsvParser } from "@/hooks/useParseCsv";
 import { MatchedItem, useDataMatcher } from "@/hooks/useDataMatcher";
 import InputFile from "@/components/InputFile";
 import BaseButton from "@/components/BaseButton";
 import ItemTable from "@/components/ItemTable";
+import InfoBlock from "@/components/InfoBlock";
 
 export default function Home() {
   const [inventory, setInventory] = useState<string[][] | null>(null);
@@ -40,8 +41,8 @@ export default function Home() {
         variationId: item.variationId,
         quantity: Number(item.zaiko[4]),
       }));
-    setMessage("更新しました！");
     const response = await updateInventory(updateItems[0]);
+    setMessage("更新しました！");
     console.log(response);
   }
 
@@ -94,11 +95,7 @@ export default function Home() {
           </>
         )}
       </div>
-      {message && (
-        <div className="mt-4 bg-teal-100 border-l-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-sm">
-          {message}
-        </div>
-      )}
+      {message && <InfoBlock>{message}</InfoBlock>}
     </main>
   );
 }
