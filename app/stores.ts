@@ -22,6 +22,7 @@ export async function updateInventory({
         Authorization: `Bearer ${process.env.STORES_API_KEY}`,
         "Content-Type": "application/json",
       },
+      cache: "no-store",
       body: JSON.stringify({ update_type: "absolute", quantity }),
     }
   );

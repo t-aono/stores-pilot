@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getOrders, updateInventory } from "./stores";
+import { updateInventory } from "./stores";
 import { useCsvParser } from "@/hooks/useParseCsv";
 import { MatchedItem, useDataMatcher } from "@/hooks/useDataMatcher";
 import InputFile from "@/components/InputFile";
 import BaseButton from "@/components/BaseButton";
 import ItemTable from "@/components/ItemTable";
+import InfoBlock from "@/components/InfoBlock";
 
 export default function Home() {
   const [inventory, setInventory] = useState<string[][] | null>(null);
@@ -15,6 +16,7 @@ export default function Home() {
   const [checkedIds, setCheckedIds] = useState<string[]>([]);
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [message, setMessage] = useState("");
+  const [sendCount, setSendCount] = useState(0);
   const { parseCsvFile } = useCsvParser();
   const { getMatches } = useDataMatcher();
 
@@ -40,9 +42,14 @@ export default function Home() {
         variationId: item.variationId,
         quantity: Number(item.zaiko[4]),
       }));
+    for await (let updateItem of updateItems) {
+      setSendCount((count) => count + 1);
+      console.log(await updateInventory(updateItem));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+    }
     setMessage("更新しました！");
-    const response = await updateInventory(updateItems[0]);
-    console.log(response);
+    setCheckedIds([]);
+    setSendCount(0);
   }
 
   return (
@@ -88,17 +95,18 @@ export default function Home() {
               <BaseButton
                 onClick={postInventory}
                 label="更新"
-                disabled={checkedIds.length === 0}
+                disabled={checkedIds.length === 0 || sendCount > 0}
               />
+              {sendCount > 0 && (
+                <span className="text-teal-300 ml-6">
+                  送信中...（{sendCount}/{checkedIds.length}）
+                </span>
+              )}
             </div>
           </>
         )}
       </div>
-      {message && (
-        <div className="mt-4 bg-teal-100 border-l-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-sm">
-          {message}
-        </div>
-      )}
+      {message && <InfoBlock>{message}</InfoBlock>}
     </main>
   );
 }

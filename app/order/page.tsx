@@ -1,12 +1,17 @@
 "use client";
 
-import BaseButton from "@/components/BaseButton";
 import { getOrders } from "../stores";
+import { useState } from "react";
+import BaseButton from "@/components/BaseButton";
+import InfoBlock from "@/components/InfoBlock";
 
 export default function Order() {
+  const [message, setMessage] = useState("");
+
   async function fetchOrder() {
     const { orders } = await getOrders();
     console.log(orders);
+    setMessage("取得しました！");
   }
 
   return (
@@ -15,6 +20,7 @@ export default function Order() {
       <div className="mt-4">
         <BaseButton onClick={fetchOrder} label="fetch order" />
       </div>
+      {message && <InfoBlock>{message}</InfoBlock>}
     </main>
   );
 }
